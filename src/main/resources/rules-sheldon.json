@@ -1,0 +1,29 @@
+[
+  {
+    "element"       : "rock",
+    "winsAgainst"   : ["lizard", "scissors"],
+    "hotkey"         : "r"
+  },
+
+  {
+    "element"       : "paper",
+    "winsAgainst"   : ["rock", "spock"],
+    "hotkey"         : "p"
+  },
+
+  {
+    "element"       : "scissors",
+    "winsAgainst"   : ["paper", "lizard"],
+    "hotkey"         : "s"
+  },
+  {
+    "element"       : "lizard",
+    "winsAgainst"   : ["spock", "paper"],
+    "hotkey"         : "l"
+  },
+  {
+    "element"       : "spock",
+    "winsAgainst"   : ["scissors", "rock"],
+    "hotkey"         : "S"
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "name":"human",
+    "type":"human"
+  },
+
+  {
+    "name":"computer",
+    "type":"machine"
+  }
+]
