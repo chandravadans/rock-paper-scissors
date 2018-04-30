@@ -25,12 +25,9 @@ public class ConfigValidatorTest {
         gameConfig = new GameConfig();
         gameConfig.setElements(Arrays.asList("rock", "paper", "scissors"));
 
-        Player player1 = new Player();
-        player1.setName("p1");
-        player1.setType(PlayerTypeEnum.human);
+        Player player1 = new Player("p1", PlayerTypeEnum.human);
 
-        Player player2 = new Player();
-        player2.setType(PlayerTypeEnum.machine);
+        Player player2 = new Player("p2", PlayerTypeEnum.machine);
 
         List<Player> players = new ArrayList<>(Arrays.asList(player1, player2));
 
@@ -61,7 +58,7 @@ public class ConfigValidatorTest {
     @DisplayName("Invalid player type")
     void test2() {
         List<Player> players = new ArrayList<>(gameConfig.getPlayers());
-        players.get(0).setType(null);
+        players.add(new Player("p3", null));
         gameConfig.setPlayers(players);
         Assertions.assertThrows(ValidationException.class, () -> testConfigValidator.validateGameConfig(gameConfig));
     }

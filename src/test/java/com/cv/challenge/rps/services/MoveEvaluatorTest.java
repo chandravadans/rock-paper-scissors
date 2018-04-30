@@ -3,6 +3,7 @@ package com.cv.challenge.rps.services;
 import com.cv.challenge.rps.domain.Move;
 import com.cv.challenge.rps.domain.Player;
 import com.cv.challenge.rps.domain.Rule;
+import com.cv.challenge.rps.domain.enums.PlayerTypeEnum;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,11 +40,9 @@ public class MoveEvaluatorTest {
 
         rules.addAll(Arrays.asList(rule1, rule2, rule3));
 
-        Player player1 = new Player();
-        player1.setName("p1");
+        Player player1 = new Player("p1", PlayerTypeEnum.machine);
 
-        Player player2 = new Player();
-        player2.setName("p2");
+        Player player2 = new Player("p2", PlayerTypeEnum.machine);
 
         Move move1 = new Move(player1, "rock");
         Move move2 = new Move(player2, "scissors");
@@ -60,8 +59,7 @@ public class MoveEvaluatorTest {
     @Test
     @DisplayName("Tie scenario")
     void test2() {
-        Player p2 = new Player();
-        p2.setName("p2");
+        Player p2 = new Player("p2", PlayerTypeEnum.machine);
         Move move2 = new Move(p2, "rock");
         moves.set(1, move2);
         Player winner = testMoveEvaluator.getWinner(moves, rules);

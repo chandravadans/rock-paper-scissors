@@ -8,13 +8,13 @@ import com.cv.challenge.rps.util.Util;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class MoveEvaluator {
 
     /**
      * Given a list of moves made by players and the list of rules defined, returns the player with maximum number of wins
      * If there are just 2 players and there's a tie, returns null
+     *
      * @param moves
      * @param rules
      * @return
@@ -23,55 +23,60 @@ public class MoveEvaluator {
 
         int maxWins = 0;
         Player winner = null;
-        Map<String, Integer> winCounts = new HashMap<>();
+        Map<Player, Integer> winCounts = new HashMap<>();
 
         // Consider all combinations, return the player with maximum wins
         for (int i = 0; i < moves.size(); i++) {
             for (int j = 0; j < moves.size(); j++) {
 
-                // Don't consider player vs him/herself
-                if (!moves.get(i).getPlayer().equals(moves.get(j).getPlayer())) {
+                Player winningPlayer = decideWinner(moves.get(i), moves.get(j), rules);
 
-                    Player p1 = moves.get(i).getPlayer();
-                    Player p2 = moves.get(j).getPlayer();
+                if (winningPlayer == null) {
+                    // Don't do anything if the result is a tie
+                    continue;
+                }
 
-                    String p1Choice = moves.get(i).getChoice();
-                    String p2Choice = moves.get(j).getChoice();
+                // Record 1 win for player if not already done, else add 1 to existing number of wins
+                winCounts.compute(winningPlayer, (player, wins) -> wins == null ? 1 : wins + 1);
 
-                    Rule p1Rule = Util.returnRuleForElement(rules, p1Choice);
-                    Rule p2Rule = Util.returnRuleForElement(rules, p2Choice);
-
-                    if (p1Rule.getWinsAgainst().contains(p2Choice)) {
-                        // If p1's move wins against p2's move
-                        if (winCounts.containsKey(p1.getName())) {
-                            winCounts.put(p1.getName(), winCounts.get(p1.getName()) + 1);
-                        } else {
-                            winCounts.put(p1.getName(), 1);
-                        }
-
-                        // Update maxWins if required
-                        if (winCounts.get(p1.getName()) > maxWins) {
-                            maxWins = winCounts.get(p1.getName());
-                            winner = p1;
-                        }
-
-                    } else if (p2Rule.getWinsAgainst().contains(p1Choice)) {
-                        // If p2's move wins against p1's move
-                        if (winCounts.containsKey(p2.getName())) {
-                            winCounts.put(p2.getName(), winCounts.get(p2.getName()) + 1);
-                        } else {
-                            winCounts.put(p2.getName(), 1);
-                        }
-
-                        if (winCounts.get(p2.getName()) > maxWins) {
-                            maxWins = winCounts.get(p2.getName());
-                            winner = p2;
-                        }
-                    }
-
+                // Update maxWins if required
+                if (winCounts.get(winningPlayer) > maxWins) {
+                    maxWins = winCounts.get(winningPlayer);
+                    winner = winningPlayer;
                 }
             }
         }
         return winner;
+    }
+
+    /**
+     * Given 2 Moves and a list of rules, returns the player who played the winning move. Returns null if there's a tie
+     *
+     * @param m1    Move by player 1
+     * @param m2    Move by player 2
+     * @param rules List of rules the moves should be evaluated against
+     * @return Player who made the winning move, null otherwise
+     */
+    private Player decideWinner(Move m1, Move m2, List<Rule> rules) {
+
+        Player p1 = m1.getPlayer();
+        Player p2 = m2.getPlayer();
+
+        String p1Choice = m1.getChoice();
+        String p2Choice = m2.getChoice();
+
+        Rule p1Rule = Util.returnRuleForElement(rules, p1Choice);
+        Rule p2Rule = Util.returnRuleForElement(rules, p2Choice);
+
+        if (p1Rule.getWinsAgainst().contains(p2Choice)) {
+            // p1 wins against p2
+            return p1;
+        } else if (p2Rule.getWinsAgainst().contains(p1Choice)) {
+            // p2 wins against p1
+            return p2;
+        } else {
+            // Its a tie, nobody wins
+            return null;
+        }
     }
 }
